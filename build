@@ -1,0 +1,4 @@
+#!/bin/bash
+
+babel ./src --out-dir ./lib
+webpack ./lib/index.js ./dist/bundle.js

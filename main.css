@@ -1,0 +1,39 @@
+@keyframes scaleUp {
+  0% {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleDown {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+#content {
+  height: 100%;
+  background: linear-gradient(45deg, #A1FFFC 0%, #FEB522 100%);
+}
+
+.circle {
+  border-radius: 50%;
+  animation: scaleUp 0.2s ease forwards;
+}
+
+.scale-down .circle {
+  animation: scaleDown 1s ease forwards;
+}
