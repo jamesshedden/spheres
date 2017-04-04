@@ -31,9 +31,9 @@ body {
 
 .circle {
   border-radius: 50%;
-  animation: scaleUp 0.2s ease forwards;
+  animation: scaleUp 0.2s ease;
 }
 
-.scale-down .circle {
+.scale-down {
   animation: scaleDown 1s ease forwards;
 }
