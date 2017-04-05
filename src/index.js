@@ -5,7 +5,7 @@ const randomNumber = (min, max) => Math.floor(Math.random() * max) + min;
 
 let COUNTER = 0;
 
-const MAX_CIRCLE_AMOUNT = 20;
+const MAX_CIRCLE_AMOUNT = 15;
 const PARALLAX_AMOUNT_DIVISOR = 80;
 const LONG_ANIMATION_DURATION = 1000;
 const SHORT_ANIMATION_DURATION = 200;
