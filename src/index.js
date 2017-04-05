@@ -12,6 +12,24 @@ const SHORT_ANIMATION_DURATION = 200;
 
 const COLORS = ['#FF9E9E', '#9EFFC6', '#9EEFFF', '#D8CEFF', '#B6FF9E'];
 
+const getPointerCoordinatesFromCentre = (positionX, positionY) => {
+  return {
+    x: positionX - (window.innerWidth / 2),
+    y: (window.innerHeight / 2) - positionY,
+  };
+};
+
+const getTranslateAmountsFromCoordinates = (coordinates, multiplierFromZero, divisor) => {
+  const MULTIPLIER_BUFFER = 2;
+  // multiplier comes from the counter, or the array index of a circle element, so
+  // will sometimes be 0 or 1 but we don't want to multiply by these
+
+  return {
+    translateX: -(coordinates.x * (multiplierFromZero + MULTIPLIER_BUFFER)) / divisor,
+    translateY: (coordinates.y * (multiplierFromZero + MULTIPLIER_BUFFER)) / divisor,
+  };
+};
+
 const makeCircle = (event) => {
   const circle = document.createElement('div');
   circle.id = `circle-${ COUNTER }`;
@@ -20,14 +38,13 @@ const makeCircle = (event) => {
 
   const randomDimension = randomNumber(100, 250);
 
-  const coordinatesFromCentre = {
-    x: event.pageX - (window.innerWidth / 2),
-    y: (window.innerHeight / 2) - event.pageY,
-  };
+  const multiplierForTranslateAmounts = COUNTER > MAX_CIRCLE_AMOUNT ? MAX_CIRCLE_AMOUNT : COUNTER;
 
-  const counterForTranslate = COUNTER > MAX_CIRCLE_AMOUNT ? MAX_CIRCLE_AMOUNT : COUNTER;
-  const translateXAmount = -(coordinatesFromCentre.x * (counterForTranslate + 2)) / PARALLAX_AMOUNT_DIVISOR;
-  const translateYAmount = (coordinatesFromCentre.y * (counterForTranslate + 2)) / PARALLAX_AMOUNT_DIVISOR;
+  const { translateX, translateY } = getTranslateAmountsFromCoordinates(
+    getPointerCoordinatesFromCentre(event.pageX, event.pageY),
+    multiplierForTranslateAmounts,
+    PARALLAX_AMOUNT_DIVISOR
+  );
 
   COUNTER++;
 
@@ -36,9 +53,9 @@ const makeCircle = (event) => {
     height: ${ randomDimension }px;
     position: fixed;
     opacity: 0;
-    transform: translateX(${ translateXAmount }px) translateY(${ translateYAmount }px);
-    top: ${ event.pageY - translateYAmount - (randomDimension / 2) }px;
-    left: ${ event.pageX - translateXAmount - (randomDimension / 2) }px;
+    transform: translateX(${ translateX }px) translateY(${ translateY }px);
+    top: ${ event.pageY - translateY - (randomDimension / 2) }px;
+    left: ${ event.pageX - translateX - (randomDimension / 2) }px;
     background: linear-gradient(${ randomNumber(0, 90) }deg, #FEB522 0%, ${ COLORS[randomNumber(0, COLORS.length)] } 100%);
   `);
 
@@ -61,19 +78,17 @@ const makeCircle = (event) => {
 };
 
 const mouseMove = (event) => {
-  const coordinatesFromCentre = {
-    x: event.pageX - (window.innerWidth / 2),
-    y: (window.innerHeight / 2) - event.pageY,
-  };
-
   const circles = document.getElementsByClassName('circle');
 
   _.map(circles, (circle, index) => {
-    const translateXAmount = -(coordinatesFromCentre.x * (index + 2)) / PARALLAX_AMOUNT_DIVISOR;
-    const translateYAmount = (coordinatesFromCentre.y * (index + 2)) / PARALLAX_AMOUNT_DIVISOR;
+    const { translateX, translateY } = getTranslateAmountsFromCoordinates(
+      getPointerCoordinatesFromCentre(event.pageX, event.pageY),
+      index,
+      PARALLAX_AMOUNT_DIVISOR
+    );
 
     circle.style.transform = `
-      scale(1) translateX(${ translateXAmount }px) translateY(${ translateYAmount }px)
+      scale(1) translateX(${ translateX }px) translateY(${ translateY }px)
     `;
   });
 };
