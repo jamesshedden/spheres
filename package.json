@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "./start"
+    "start": "./build"
   },
   "author": "",
   "license": "ISC",
